@@ -8,6 +8,7 @@
 #include "image.h"
 #include "demo.h"
 #include <sys/time.h>
+#include <time.h>
 
 #define DEMO 1
 
@@ -42,6 +43,9 @@ static int demo_done = 0;
 static float *avg;
 double demo_time;
 static int grv_frame = 0;
+
+static int grv_frame = 0;
+static FILE *fp_bbox;
 
 double get_wall_time()
 {
@@ -78,10 +82,50 @@ void *detect_in_thread(void *ptr)
     printf("\nFPS:%.1f\n",fps);
     printf("Objects:\n\n");
     image display = buff[(buff_index+2) % 3];
+
     char im_name[256];
     sprintf(im_name, "/tmp/yolo/%05d", grv_frame);
     save_image(display,im_name);
     ++grv_frame;
+/*
+
+    char im_name[256];
+    sprintf(im_name, "results/raw/%05d", grv_frame);
+    save_image(display,im_name);
+    ++grv_frame;
+
+
+    int i = 0;
+    for(i = 0; i < demo_detections; ++i){
+
+        int class = max_index(probs[i], demo_classes);
+        float prob = probs[i][class];
+        // person class ->  14
+        if((class == 14) && prob > demo_thresh){
+            box b = boxes[i];
+            // char im_name[256];
+            // sprintf(im_name, "/tmp/yolo/%d_%d", grv_frame, i);
+            // printf("x%d y%d w%d h%d \n", b.x,b.y,b.w,b.h);
+
+            int left  = (b.x-b.w/2.)*display.w;
+            int right = (b.x+b.w/2.)*display.w;
+            int top   = (b.y-b.h/2.)*display.h;
+            int bot   = (b.y+b.h/2.)*display.h;
+            if(left < 0) left = 0;
+            if(right > display.w-1) right = display.w-1;
+            if(top < 0) top = 0;
+            if(bot > display.h-1) bot = display.h-1;
+
+            // image cropped_image = crop_image(display,left,top,right-left,bot-top);
+            // save_image(cropped_image,im_name);
+
+            char values[256];
+            sprintf(values, "%d %d %d %d %d %d\n", left, top, right-left, bot-top, i, grv_frame);
+            fputs(values, fp_bbox);
+        }
+    }
+
+*/
     draw_detections(display, demo_detections, demo_thresh, boxes, probs, 0, demo_names, demo_alphabet, demo_classes);
 
     demo_index = (demo_index + 1)%demo_frame;
@@ -135,6 +179,24 @@ void *detect_loop(void *ptr)
 
 void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const char *filename, char **names, int classes, int delay, char *prefix, int avg_frames, float hier, int w, int h, int frames, int fullscreen)
 {
+
+    // begin of GRV
+
+    time_t rawtime;
+    struct tm *ltime;
+    char buffer[80];
+    time( &rawtime );
+    ltime = localtime( &rawtime );
+    char bbox_filename[256];
+    strftime(bbox_filename, 256, "results/bboxes_%d-%b-%Y %H:%M.txt", ltime);
+    fp_bbox = fopen(bbox_filename, "w");
+    if(!fp_bbox) file_error(bbox_filename);
+    char val_header[256];
+    sprintf(val_header, "left top right bot bbox frame\n");
+    fputs(val_header, fp_bbox);
+
+    // end of GRV
+
     demo_frame = avg_frames;
     predictions = calloc(demo_frame, sizeof(float*));
     image **alphabet = load_alphabet();
@@ -194,7 +256,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
 
     int count = 0;
     if(!prefix){
-        cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
+        cvNamedWindow("Demo", CV_WINDOW_NORMAL);
         if(fullscreen){
             cvSetWindowProperty("Demo", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
         } else {
@@ -222,6 +284,9 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
         pthread_join(detect_thread, 0);
         ++count;
     }
+
+    //GRV
+    fclose(fp_bbox);
 }
 
 void demo_compare(char *cfg1, char *weight1, char *cfg2, char *weight2, float thresh, int cam_index, const char *filename, char **names, int classes, int delay, char *prefix, int avg_frames, float hier, int w, int h, int frames, int fullscreen)
@@ -282,7 +347,7 @@ void demo_compare(char *cfg1, char *weight1, char *cfg2, char *weight2, float th
 
     int count = 0;
     if(!prefix){
-        cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
+        cvNamedWindow("Demo", CV_WINDOW_NORMAL);
         if(fullscreen){
             cvSetWindowProperty("Demo", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
         } else {
@@ -317,4 +382,3 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     fprintf(stderr, "Demo needs OpenCV for webcam images.\n");
 }
 #endif
-
