@@ -41,6 +41,7 @@ static int demo_index = 0;
 static int demo_done = 0;
 static float *avg;
 double demo_time;
+static int grv_frame = 0;
 
 double get_wall_time()
 {
@@ -77,6 +78,10 @@ void *detect_in_thread(void *ptr)
     printf("\nFPS:%.1f\n",fps);
     printf("Objects:\n\n");
     image display = buff[(buff_index+2) % 3];
+    char im_name[256];
+    sprintf(im_name, "/tmp/yolo/%05d", grv_frame);
+    save_image(display,im_name);
+    ++grv_frame;
     draw_detections(display, demo_detections, demo_thresh, boxes, probs, 0, demo_names, demo_alphabet, demo_classes);
 
     demo_index = (demo_index + 1)%demo_frame;
@@ -94,7 +99,7 @@ void *fetch_in_thread(void *ptr)
 
 void *display_in_thread(void *ptr)
 {
-    show_image_cv(buff[(buff_index + 1)%3], "Demo", ipl);
+    //show_image_cv(buff[(buff_index + 1)%3], "Demo", ipl);
     int c = cvWaitKey(1);
     if (c != -1) c = c%256;
     if (c == 27) {
@@ -207,7 +212,7 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
         if(!prefix){
             fps = 1./(get_wall_time() - demo_time);
             demo_time = get_wall_time();
-            display_in_thread(0);
+            //display_in_thread(0);
         }else{
             char name[256];
             sprintf(name, "%s_%08d", prefix, count);
