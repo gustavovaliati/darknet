@@ -82,7 +82,8 @@ void *fetch_in_thread(void *ptr)
 void *display_in_thread(void *ptr)
 {
     show_image_cv(buff[(buff_index + 1)%3], "Demo", ipl);
-    int c = cvWaitKey(1);
+//GRV INIT
+/*    int c = cvWaitKey(1);
     if (c != -1) c = c%256;
     if (c == 27) {
         demo_done = 1;
@@ -97,7 +98,8 @@ void *display_in_thread(void *ptr)
     } else if (c == 81) {
         demo_hier -= .02;
         if(demo_hier <= .0) demo_hier = .0;
-    }
+    }*/
+//GRV END
     return 0;
 }
 
@@ -172,7 +174,8 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
     ipl = cvCreateImage(cvSize(buff[0].w,buff[0].h), IPL_DEPTH_8U, buff[0].c);
 
     int count = 0;
-    if(!prefix){
+//GRV INIT
+/*    if(!prefix){
         cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
         if(fullscreen){
             cvSetWindowProperty("Demo", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
@@ -180,7 +183,8 @@ void demo(char *cfgfile, char *weightfile, float thresh, int cam_index, const ch
             cvMoveWindow("Demo", 0, 0);
             cvResizeWindow("Demo", 1352, 1013);
         }
-    }
+    }*/
+//GRV END
 
     demo_time = what_time_is_it_now();
 
@@ -260,7 +264,8 @@ void demo_compare(char *cfg1, char *weight1, char *cfg2, char *weight2, float th
     ipl = cvCreateImage(cvSize(buff[0].w,buff[0].h), IPL_DEPTH_8U, buff[0].c);
 
     int count = 0;
-    if(!prefix){
+//GRV INIT
+/*    if(!prefix){
         cvNamedWindow("Demo", CV_WINDOW_NORMAL); 
         if(fullscreen){
             cvSetWindowProperty("Demo", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
@@ -268,7 +273,8 @@ void demo_compare(char *cfg1, char *weight1, char *cfg2, char *weight2, float th
             cvMoveWindow("Demo", 0, 0);
             cvResizeWindow("Demo", 1352, 1013);
         }
-    }
+    }*/
+//GRV END
 
     demo_time = what_time_is_it_now();
 
