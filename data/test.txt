@@ -1,1 +1,1 @@
-/home/grvaliati/workspace/datasets/voc/2007_test.txt
+/home/grvaliati/workspace/datasets/pti/PTI01/train-only1person.txt

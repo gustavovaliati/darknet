@@ -1,0 +1,5 @@
+classes = 1
+train  = /home/grvaliati/workspace/datasets/pti/training_dataset/train001.txt
+valid  = /home/grvaliati/workspace/datasets/pti/training_dataset/train001.txt
+names = data/pti.names
+backup = backup-pti-001

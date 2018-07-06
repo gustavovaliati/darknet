@@ -133,8 +133,8 @@ void train_detector(char *datacfg, char *cfgfile, char *weightfile, int *gpus, i
             sprintf(buff, "%s/%s.backup", backup_directory, base);
             save_weights(net, buff);
         }
-        //if(i%10000==0 || (i < 1000 && i%100 == 0)){
-	 if(i%1000==0 || (i < 1000 && i%100 == 0)){
+        if(i%10000==0 || (i < 1000 && i%100 == 0)){
+	 //if(i%1000==0 || (i < 1000 && i%100 == 0)){
 #ifdef GPU
             if(ngpus != 1) sync_nets(nets, ngpus, 0);
 #endif
@@ -582,7 +582,7 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
         if(filename){
             strncpy(input, filename, 256);
         } else {
-            printf("Enter Image Path: ");
+            //printf("Enter Image Path: ");
             fflush(stdout);
             input = fgets(input, 256, stdin);
             if(!input) return;
@@ -612,20 +612,20 @@ void test_detector(char *datacfg, char *cfgfile, char *weightfile, char *filenam
         get_region_boxes(l, im.w, im.h, net->w, net->h, thresh, probs, boxes, masks, 0, 0, hier_thresh, 1);
         //if (nms) do_nms_obj(boxes, probs, l.w*l.h*l.n, l.classes, nms);
         if (nms) do_nms_sort(boxes, probs, l.w*l.h*l.n, l.classes, nms);
-        draw_detections(im, l.w*l.h*l.n, thresh, boxes, probs, masks, names, alphabet, l.classes);
+        //draw_detections(im, l.w*l.h*l.n, thresh, boxes, probs, masks, names, alphabet, l.classes);
         if(outfile){
             save_image(im, outfile);
         }
         else{
             save_image(im, "predictions");
 #ifdef OPENCV
-            cvNamedWindow("predictions", CV_WINDOW_NORMAL); 
+            /*cvNamedWindow("predictions", CV_WINDOW_NORMAL); 
             if(fullscreen){
                 cvSetWindowProperty("predictions", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
             }
             show_image(im, "predictions");
             cvWaitKey(0);
-            cvDestroyAllWindows();
+            cvDestroyAllWindows();*/
 #endif
         }
 
