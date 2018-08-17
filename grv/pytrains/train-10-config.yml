@@ -1,0 +1,3 @@
+data: grv/cfg/voc.data
+cfg: grv/cfg/yolov3-tiny-voc-grv.cfg
+weights: backup/yolov3-tiny-voc-grv.backup

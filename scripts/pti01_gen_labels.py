@@ -16,7 +16,7 @@ ap.add_argument("-s", "--shuffle",
                 required = False,
                 default=True,
                 type=bool,
-                help = "The dataset should be splited before split?")
+                help = "The dataset should be shuffled before split?")
 
 ARGS = ap.parse_args()
 
@@ -43,7 +43,7 @@ with open(train_file_path, 'w') as train_file:
         for img in img_list:
             '''
             We are splitting the dataset by folder.
-            Normally each folder represents a different camera.
+            Normally each folder represents a different camera and event.
             So we get a better representative splitting of train/test.
             '''
             folder = os.path.dirname(img)
@@ -59,4 +59,10 @@ with open(train_file_path, 'w') as train_file:
                 for im in folder_images[folder_train_count:]:
                     test_file.write(im+'\n')
 
+                #dont know why but this didnt work ->  train_file.write('\n'.join(folder_images[:folder_train_count]))
+
                 print('Folder {}, {} imgs: train {} | test {}'.format(folder, folder_total_count, folder_train_count, folder_test_count))
+
+print('The txt files have been created:')
+print(train_file_path)
+print(test_file_path)

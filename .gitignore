@@ -15,7 +15,7 @@ opencv/
 convnet/
 decaf/
 submission/
-cfg/
+./cfg/
 darknet
 .fuse*
 
@@ -25,3 +25,5 @@ ehthumbs.db
 Icon?
 Thumbs.db
 *.swp
+
+grv/sentry-config.yml

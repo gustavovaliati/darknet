@@ -1,0 +1,13 @@
+#runs default coco weights over ptidataset
+classes= 80
+
+#train  = /home/grvaliati/workspace/datasets/coco/trainvalno5k.txt
+train = /home/grvaliati/workspace/datasets/pti/PTI01/train_pti01_6342imgs_v20180706193526.txt
+
+#valid  = /home/grvaliati/workspace/datasets/coco/5k.txt
+valid  = /home/grvaliati/workspace/datasets/pti/PTI01/test_pti01_1585imgs_v20180706193526.txt
+#valid = /home/grvaliati/workspace/datasets/pti/PTI01/full_pti01_7927imgs.txt
+
+names = data/coco.names
+backup = backup
+#eval=coco
