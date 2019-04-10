@@ -1,0 +1,8 @@
+#runs default coco weights over ptidataset
+classes= 1
+train = /home/grvaliati/workspace/datasets/pti/train_pti01_v20181030213454_by_event_to-the-server.txt
+
+valid  = /home/grvaliati/workspace/datasets/pti/test_pti01_v20181030213454_by_event_to-the-server.txt
+
+names = data/coco.names
+backup = backup
